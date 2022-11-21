@@ -1,0 +1,10 @@
+package entrainement;
+
+public class Member extends Person {
+	public String section;
+
+	public Member(String section) {
+		super();
+		this.section = section;
+	}
+}

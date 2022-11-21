@@ -1,0 +1,8 @@
+package entrainement;
+
+public class MainClass {
+	public static void main(String[] args) {
+		Membre MemMatoya = new Membre();
+	}
+
+}

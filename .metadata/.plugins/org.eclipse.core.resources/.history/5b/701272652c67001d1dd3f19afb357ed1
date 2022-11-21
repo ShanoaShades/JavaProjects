@@ -1,0 +1,80 @@
+package entrainement;
+
+import javax.swing.*;
+import java.awt.event.*;
+
+public class LetsPlay implements ActionListener {
+	JFrame f;
+	JLabel title, labelName, labelFirstName, labelAge, labelSection;
+	JTextField fieldFirstName, fieldName, fieldAge, fieldSection;
+	JButton confirm;
+	Member newMember;
+
+	LetsPlay() {
+		newMember = new Member();
+		
+		// AFFICHAGE
+		f = new JFrame("Inscription");
+		
+		// LABELS
+		title = new JLabel("NOUVEAU MEMBRE");
+		title.setBounds(0, 30, 500, 30);
+		title.setHorizontalAlignment(JLabel.CENTER);
+		labelFirstName = new JLabel("Prénom");
+		labelFirstName.setBounds(100, 100, 50, 30);
+		labelName = new JLabel("Nom");
+		labelName.setBounds(100, 150, 50, 30);
+		labelAge = new JLabel("Âge");
+		labelAge.setBounds(100, 200, 50, 30);
+		labelSection = new JLabel("Section");
+		labelSection.setBounds(100, 250, 50, 30);
+		
+		// CHAMPS DE TEXTE
+		fieldFirstName = new JTextField();
+		fieldFirstName.setBounds(170, 100, 200, 30);
+		fieldName = new JTextField();
+		fieldName.setBounds(170, 150, 200, 30);
+		fieldAge = new JTextField();
+		fieldAge.setBounds(170, 200, 200, 30);
+		fieldSection = new JTextField();
+		fieldSection.setBounds(170, 250, 200, 30);
+		
+		// BOUTON
+		confirm = new JButton("Confirmer");
+		confirm.setBounds(190, 350, 100, 25);
+		confirm.addActionListener(this);
+
+		f.add(title);
+		f.add(fieldFirstName);
+		f.add(fieldName);
+		f.add(fieldAge);
+		f.add(fieldSection);
+		f.add(labelName);
+		f.add(labelFirstName);
+		f.add(labelAge);
+		f.add(labelSection);
+		f.add(confirm);
+		f.setSize(500, 500);
+		f.setLayout(null);
+		f.setVisible(true);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		/*if (e.getSource() == set) {
+			count++;
+		} else if (e.getSource() == reset) {
+			if (count == 0) {
+				JOptionPane.showMessageDialog(f, "Le compteur est déjà à zéro !", "MESSAGE", JOptionPane.ERROR_MESSAGE);
+			} else {
+				count = 0;
+				JOptionPane.showMessageDialog(f, "Le compteur a été réinitialisé", "MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+		texte.setText("Vous avez cliqué "+count+" fois");*/
+	
+	}
+
+	public static void main(String[] args) {
+		new LetsPlay();
+	}
+}

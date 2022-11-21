@@ -1,0 +1,21 @@
+package entrainement;
+
+public class Member extends Person {
+	public String name;
+	public String firstName;
+	public String age;
+	public String section;
+
+	public Member(String section) {
+		super();
+		this.section = section;
+	}
+	
+	public Member(String name, String firstName, String age, String section) {
+		super();
+		this.name = name;
+		this.firstName = firstName;
+		this.age = age;
+		this.section = section;
+	}
+}

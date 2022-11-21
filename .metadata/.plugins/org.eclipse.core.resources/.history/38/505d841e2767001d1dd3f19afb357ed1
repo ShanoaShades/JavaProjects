@@ -1,0 +1,69 @@
+package entrainement;
+
+import javax.swing.*;
+import java.awt.event.*;
+
+public class LetsPlay implements ActionListener {
+	JFrame f;
+	JTextField fieldFirstName, fieldName, fieldAge, fieldSection;
+	JLabel labelName, labelFirstName, labelAge, labelSection;
+	JButton confirm;
+
+	LetsPlay() {
+		f = new JFrame("Inscription");
+		
+		labelFirstName = new JLabel("Prénom");
+		labelFirstName.setBounds(50, 20, 400, 30);
+		labelName = new JLabel("Nom");
+		labelName.setBounds(0, 0, 400, 30);
+		labelAge = new JLabel("Âge");
+		labelAge.setBounds(0, 0, 400, 30);
+		labelSection = new JLabel("Section");
+		labelSection.setBounds(0, 0, 400, 30);
+		
+		fieldFirstName = new JTextField();
+		fieldFirstName.setBounds(0, 0, 400, 30);
+		fieldName = new JTextField();
+		fieldName.setBounds(0, 0, 400, 30);
+		fieldAge = new JTextField();
+		fieldAge.setBounds(0, 0, 400, 30);
+		fieldSection = new JTextField();
+		fieldSection.setBounds(0, 0, 400, 30);
+		
+		confirm = new JButton("Confirmer");
+		confirm.setBounds(190, 325, 100, 25);
+		confirm.addActionListener(this);
+
+		f.add(fieldFirstName);
+		f.add(fieldName);
+		f.add(fieldAge);
+		f.add(fieldSection);
+		f.add(labelName);
+		f.add(labelFirstName);
+		f.add(labelAge);
+		f.add(labelSection);
+		f.add(confirm);
+		f.setSize(500, 500);
+		f.setLayout(null);
+		f.setVisible(true);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		/*if (e.getSource() == set) {
+			count++;
+		} else if (e.getSource() == reset) {
+			if (count == 0) {
+				JOptionPane.showMessageDialog(f, "Le compteur est déjà à zéro !", "MESSAGE", JOptionPane.ERROR_MESSAGE);
+			} else {
+				count = 0;
+				JOptionPane.showMessageDialog(f, "Le compteur a été réinitialisé", "MESSAGE", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+		texte.setText("Vous avez cliqué "+count+" fois");*/
+	
+	}
+
+	public static void main(String[] args) {
+		new LetsPlay();
+	}
+}

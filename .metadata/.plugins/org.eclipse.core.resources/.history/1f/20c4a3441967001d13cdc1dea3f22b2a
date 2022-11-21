@@ -1,0 +1,11 @@
+package entrainement;
+
+public class MainClass {
+	public static void main(String[] args) {
+		Member MemMatoya = new Member("Rhul", "Y'Shtola", "30", "Magie");
+		
+		System.out.println(MemMatoya.getName());
+		
+	}
+
+}
