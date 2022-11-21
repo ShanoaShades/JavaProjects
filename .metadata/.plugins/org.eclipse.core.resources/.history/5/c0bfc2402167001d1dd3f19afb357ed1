@@ -1,7 +1,0 @@
-package entrainement;
-
-public class Person {
-	public String name;
-	public String firstName;
-	public String age;
-}
