@@ -5,5 +5,5 @@
  * @author AigleShanoaAugsburge
  *
  */
-module orifExercices {
+module SwingTesting {
 }
