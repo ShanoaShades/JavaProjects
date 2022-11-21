@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author AigleShanoaAugsburge
- *
- */
-module SwingTesting {
-}
