@@ -2,30 +2,22 @@ package testChange;
 
 import javax.swing.*;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 
+public class Bouton extends JButton{
+	/** Cette classe s'occupe de la gestion de la mise en forme de nos deux boutons CALCULER et EFFACER. */
 
-
-public class Bouton extends Component {
-		// Bien hériter de Component pour pouvoir l'utiliser après avec la méthode add de Fenetre.
-			
-		public Bouton() {
+	// CONSTRUCTEUR
+	public Bouton(String name, Color bgColor, int positionX, int positionY, int largeur, int hauteur) {
 		super();
+		this.setText(name);
 		
-		JButton calculer = new JButton("EFFACER");
-		calculer.setBounds(0, 50, 95, 30);
-		calculer.setBackground(Color.BLUE);
-		calculer.setOpaque(true);
-		calculer.setForeground(Color.WHITE);
-		calculer.setFont(new Font("Verdana", Font.BOLD, 10));
-		
-		JButton effacer = new JButton("EFFACER");
-		effacer.setBounds(0, 100, 95, 30);
-		effacer.setBackground(Color.BLUE);
-		effacer.setOpaque(true);
-		effacer.setForeground(Color.WHITE);
-		effacer.setFont(new Font("Verdana", Font.BOLD, 10));
+		// MISE EN FORME - BOUTON CALCULER
+		this.setBounds(positionX, positionY, largeur, hauteur);
+		this.setBackground(bgColor);
+		this.setOpaque(true);
+		// POLICE
+		this.setForeground(Color.WHITE);
+		this.setFont(new Font("Verdana", Font.BOLD, 10));
 	}
-
 }
