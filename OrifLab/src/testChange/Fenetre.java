@@ -89,8 +89,9 @@ public class Fenetre implements ActionListener, ItemListener {
 
 			if (chfToEuroRB.isSelected()) {
 				textFieldCheck = chfTF.getText();
-
-				if (textFieldCheck.isEmpty() == true) {
+				
+				
+				if (!isNumeric(textFieldCheck)) {
 					JOptionPane.showMessageDialog(fenetre, "Veuillez saisir la valeur en CHF");
 				} else {
 					tauxChange = 0.967328;
@@ -106,9 +107,9 @@ public class Fenetre implements ActionListener, ItemListener {
 			}
 
 			if (euroToChfRB.isSelected()) {
-				textFieldCheck = chfTF.getText();
+				textFieldCheck = euroTF.getText();
 
-				if (textFieldCheck.isEmpty() == true) {
+				if (!isNumeric(textFieldCheck)) {
 					JOptionPane.showMessageDialog(fenetre, "Veuillez saisir la valeur en EUR");
 				} else {
 					tauxChange = 1.033775;
@@ -135,5 +136,17 @@ public class Fenetre implements ActionListener, ItemListener {
 			chfTF.setEditable(true);
 			euroTF.setEditable(false);
 		}
+	}
+	
+	public boolean isNumeric(String textFieldCheck) {
+		// Méthode pour contrôler si le champ est bien numérique et si il n'est pas vide.		
+	    if(textFieldCheck == null || textFieldCheck.equals("")) {    
+	        return false;
+	    }
+		try {
+		    double doubleValue = Double.parseDouble(textFieldCheck);
+		    return true;
+		} catch (NumberFormatException e) {}
+		return false;
 	}
 }
