@@ -16,6 +16,7 @@ public class Bouton extends JButton{
 		this.setBounds(positionX, positionY, largeur, hauteur);
 		this.setBackground(bgColor);
 		this.setOpaque(true);
+		this.setBorderPainted(false);
 		// POLICE
 		this.setForeground(Color.WHITE);
 		this.setFont(new Font("Verdana", Font.BOLD, 10));
