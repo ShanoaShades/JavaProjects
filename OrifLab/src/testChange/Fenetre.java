@@ -15,6 +15,7 @@ public class Fenetre implements ActionListener, ItemListener {
 	JRadioButton chfToEuroRB, euroToChfRB;
 	ButtonGroup sensDeConversion;
 	Bouton calculer, effacer;
+	
 
 	Fenetre() {
 		// LABELS
