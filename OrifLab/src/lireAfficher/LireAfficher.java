@@ -1,19 +1,24 @@
 package lireAfficher;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class LireAfficher implements ActionListener {
 	JFrame fenetre;
 	JLabel nomLabel, ageLabel, tailleLabel;
 	JTextField nomTF, ageTF, tailleTF;
 	JButton lire, afficher, effacer;
+	File file;
 	
-	private String nom;
+	private String nom, donnees, userHome;
 	private int age;
 	private double taille;
-
  
 	LireAfficher() {
 		// LABELS
@@ -63,39 +68,112 @@ public class LireAfficher implements ActionListener {
 
 	// Ici on s'occupe de l'action, de ce qui se passe quand l'action est exécutée
 	public void actionPerformed(ActionEvent e) {
+		userHome = System.getProperty("user.home"); // Récupération des chemins de l'utilisateur
+		file = new File(userHome+"/Documents/file.txt"); // Création du fichier file.txt dans Documents
+		
 		if (e.getActionCommand().equals("Lire")) {
-			nom = nomTF.getText();
-			age = Integer.parseInt(ageTF.getText());
-			taille = Double.parseDouble(tailleTF.getText());
+			// VERIFICATION QUE LES DONNEES CORRESPONDENT à CE QUI EST ATTENDU
+			// Création d'un flag qui permettra de passer d'un testeur d'exception à un autre tant qu'il est true
+			boolean success, errorName, errorNum;
+			success = true;
+			errorName = false;
+			errorNum = false;
 			
-			nomTF.setText(null);
-			ageTF.setText(null);
-			tailleTF.setText(null);
-		} else if (e.getActionCommand().equals("Afficher")) {
-			nomTF.setText(nom);
-			
-			if(age == 0) {
-				ageTF.setText(null);
-			} else {
-				ageTF.setText(Integer.toString(age));
+			// Vérifier si le champ nom est vide
+			if (nomTF.getText().isEmpty()) {
+			    success = false;
+			    errorName = true;
 			}
 			
-			if(taille == 0) {
-				tailleTF.setText(null);
-			} else {
-				tailleTF.setText(Double.toString(taille));
+			// Vérifier si les nombres sont corrects
+			try {
+			    int age = Integer.parseInt(ageTF.getText());
+			    double taille = Double.parseDouble(tailleTF.getText());
+			} catch (NumberFormatException e1) {
+			    // Affichage d'un message d'erreur
+			    success = false;
+			    errorNum = true;
 			}
-		} else if (e.getActionCommand().equals("Effacer")) {
-			nom = null;
-			age = 0;
-			taille = 0;
 			
+			// PERSONNALISATION DES MESSAGES D'ERREUR
+			if (errorName && errorNum) {
+				JOptionPane.showMessageDialog(null, "Veuillez saisir un nom et des nombres valides.", "Erreur de saisie", JOptionPane.ERROR_MESSAGE);
+			} else if (errorName) {
+				JOptionPane.showMessageDialog(null, "Veuillez saisir un nom.", "Erreur de saisie", JOptionPane.ERROR_MESSAGE);
+			} else if (errorNum) {
+				JOptionPane.showMessageDialog(null, "Veuillez saisir un nombre valide.", "Erreur de saisie", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			
+			// LECTURE DES TEXTFIELD ET ENREGISTREMENT DANS UN FICHIER
+			if (success) {
+				// Récupération des données des champs de texte et stockage dans une variable String
+				donnees = nomTF.getText() + "\n" + ageTF.getText() + "\n" + tailleTF.getText(); 
+				
+				// Créer un nouveau fichier "file.txt"
+				try (FileWriter ecriture = new FileWriter(file)) { 
+				    BufferedWriter bw = new BufferedWriter(ecriture);
+				 // Écrire le contenu dde la variable donnees dans le fichier.
+				    bw.write(donnees);
+				 // On ferme le fichier
+				    bw.close();
+				    
+				    nomTF.setText(null);
+					ageTF.setText(null);
+					tailleTF.setText(null);
+				} catch (IOException e1) {
+				    e1.printStackTrace();
+				}
+			}
+			
+		} else if(e.getActionCommand().equals("Afficher")) {					
+			//LECTURE DU FICHIER ET AFFICHAGE DIRECTEMENT DANS LES TEXTFIELDS
+			try {
+				// Création du lecteur et du buffer qui va lire ligne par ligne
+	            FileReader fileReader = new FileReader(file);
+	            BufferedReader bufferedReader = new BufferedReader(fileReader);
+	            String ligne;
+	            int i = 0;
+	            
+	            // Cette boucle va continuer tant qu'elle ne rencontre pas de ligne vide
+	            // On enregistrera dans un champ différent à chaque passage en incrémentant
+	            while ((ligne = bufferedReader.readLine()) != null) {
+	                if(i==0) {
+	                	nomTF.setText(ligne);
+	                }
+	                if(i==1) {
+	                	ageTF.setText(ligne);
+	                }
+	                if(i==2) {
+	                	tailleTF.setText(ligne);
+	                }
+	                i++;
+	            }
+	            bufferedReader.close();
+	        } catch (IOException e1) {
+	            e1.printStackTrace();
+	        }
+		} else if(e.getActionCommand().equals("Effacer")) {
+			// SUPPRESSION DU CONTENU DU FICHIER ET DES CHAMPS DE TEXTE
+			// Il s'agira là d'une réécriture, tout simplement.
+			try {
+	            FileWriter suppression = new FileWriter(file);
+	            suppression.write("");
+	            // On vide le tampon de sortie
+	            suppression.flush();
+	            suppression.close();
+	        } catch (IOException e1) {
+	            e1.printStackTrace();
+	        }
+			
+			// On vide les champs de texte
 			nomTF.setText(null);
 			ageTF.setText(null);
 			tailleTF.setText(null);
 		}
 	}
-
+	
+	
 	public static void main(String[] args) {
 		new LireAfficher();
 	}
