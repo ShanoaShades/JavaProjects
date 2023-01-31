@@ -2,9 +2,15 @@ package lireAfficher;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.*;
 
-public class LireAfficher implements ActionListener {
+public class LireAfficherDB implements ActionListener {
 	JFrame fenetre;
 	JLabel nomLabel, ageLabel, tailleLabel;
 	JTextField nomTF, ageTF, tailleTF;
@@ -15,7 +21,7 @@ public class LireAfficher implements ActionListener {
 	private int age;
 	private double taille;
 
-	LireAfficher() {
+	LireAfficherDB() {
 		// LABELS
 		nomLabel = new JLabel("Nom");
 		nomLabel.setBounds(25, 35, 300, 20);
@@ -62,10 +68,7 @@ public class LireAfficher implements ActionListener {
 	}
 
 	// Ici on s'occupe de l'action, de ce qui se passe quand l'action est exécutée
-	public void actionPerformed(ActionEvent e) {
-		userHome = System.getProperty("user.home"); // Récupération des chemins de l'utilisateur
-		file = new File(userHome + "/Documents/file.txt"); // Création du fichier file.txt dans Documents
-
+	public void actionPerformed(ActionEvent e) {		
 		if (e.getActionCommand().equals("Lire")) {
 			// VERIFICATION QUE LES DONNEES CORRESPONDENT à CE QUI EST ATTENDU
 			// Création d'un flag qui permettra de passer d'un testeur d'exception à un
@@ -103,76 +106,75 @@ public class LireAfficher implements ActionListener {
 						JOptionPane.ERROR_MESSAGE);
 			}
 
-			// LECTURE DES TEXTFIELD ET ENREGISTREMENT DANS UN FICHIER
+			// LECTURE DES TEXTFIELD ET ENREGISTREMENT DANS LA DB
 			if (success) {
-				// Récupération des données des champs de texte et stockage dans une variable
-				// String
-				donnees = nomTF.getText() + "\n" + ageTF.getText() + "\n" + tailleTF.getText();
-
-				// Créer un nouveau fichier "file.txt"
-				try (FileWriter ecriture = new FileWriter(file)) {
-					BufferedWriter bw = new BufferedWriter(ecriture);
-					// Écrire le contenu dde la variable donnees dans le fichier.
-					bw.write(donnees);
-					// On ferme le fichier
-					bw.close();
-
+				String nom, age, taille;
+				nom = nomTF.getText();
+				age = ageTF.getText();
+				taille = tailleTF.getText();
+				
+				try {
+					String sql;
+					Class.forName("com.mysql.cj.jdbc.Driver");
+					Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/lire_afficher","root","");
+					Statement stmt=con.createStatement();
+					
+					// On vide la table avant toute chose pour n'avoir qu'une seule ligne.
+					sql = "DELETE FROM user_datas";
+					stmt.executeUpdate(sql);
+					sql = "INSERT INTO `user_datas` (`nom`, `age`, `taille`) VALUES ('"+ nom +"', '"+ age + "', '"+ taille +"')";
+					stmt.executeUpdate(sql);					
+					con.close();
+					
 					nomTF.setText(null);
 					ageTF.setText(null);
 					tailleTF.setText(null);
-				} catch (IOException e1) {
+				}catch (Exception e1){
 					e1.printStackTrace();
 				}
 			}
 
 		} else if (e.getActionCommand().equals("Afficher")) {
-			// LECTURE DU FICHIER ET AFFICHAGE DIRECTEMENT DANS LES TEXTFIELDS
+			// LECTURE DE LA DB ET AFFICHAGE DIRECTEMENT DANS LES TEXTFIELDS
 			try {
-				// Création du lecteur et du buffer qui va lire ligne par ligne
-				FileReader fileReader = new FileReader(file);
-				BufferedReader bufferedReader = new BufferedReader(fileReader);
-				String ligne;
-				int i = 0;
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/lire_afficher","root","");
+				Statement stmt=con.createStatement();
 
-				// Cette boucle va continuer tant qu'elle ne rencontre pas de ligne vide
-				// On enregistrera dans un champ différent à chaque passage en incrémentant
-				while ((ligne = bufferedReader.readLine()) != null) {
-					if (i == 0) {
-						nomTF.setText(ligne);
-					}
-					if (i == 1) {
-						ageTF.setText(ligne);
-					}
-					if (i == 2) {
-						tailleTF.setText(ligne);
-					}
-					i++;
-				}
-				bufferedReader.close();
-			} catch (IOException e1) {
+				ResultSet rs=stmt.executeQuery("select *  from user_datas");
+				while(rs.next()) {
+					
+					nomTF.setText(rs.getString(1));
+					ageTF.setText(Integer.toString(rs.getInt(2)));
+					tailleTF.setText(Double.toString(rs.getDouble(3)));				
+				}			
+				con.close();
+				
+			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		} else if (e.getActionCommand().equals("Effacer")) {
-			// SUPPRESSION DU CONTENU DU FICHIER ET DES CHAMPS DE TEXTE
-			// Il s'agira là d'une réécriture, tout simplement.
+			// SUPPRESSION DU CONTENU DE LA DB ET DES CHAMPS DE TEXTE
 			try {
-				FileWriter suppression = new FileWriter(file);
-				suppression.write("");
-				// On vide le tampon de sortie
-				suppression.flush();
-				suppression.close();
-			} catch (IOException e1) {
+				String sql;
+				Class.forName("com.mysql.cj.jdbc.Driver");
+				Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/lire_afficher","root","");
+				Statement stmt=con.createStatement();
+				
+				sql = "DELETE FROM user_datas";
+				stmt.executeUpdate(sql);				
+				con.close();
+				
+				nomTF.setText(null);
+				ageTF.setText(null);
+				tailleTF.setText(null);
+			}catch (Exception e1){
 				e1.printStackTrace();
 			}
-
-			// On vide les champs de texte
-			nomTF.setText(null);
-			ageTF.setText(null);
-			tailleTF.setText(null);
 		}
 	}
 
 	public static void main(String[] args) {
-		new LireAfficher();
+		new LireAfficherDB();
 	}
 }
