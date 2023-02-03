@@ -17,7 +17,7 @@ public class LireAfficherDB implements ActionListener {
 	JButton lire, afficher, effacer;
 	File file;
 
-	private String nom, donnees, userHome;
+	private String nom, donnees, userHome, sql;
 	private int age;
 	private double taille;
 
@@ -113,14 +113,12 @@ public class LireAfficherDB implements ActionListener {
 				age = ageTF.getText();
 				taille = tailleTF.getText();
 				
-				try {
-					String sql;
-					Class.forName("com.mysql.cj.jdbc.Driver");
-					Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/lire_afficher","root","");
+				try {					
+					Connection con=ConnexionDB.getConnection();
 					Statement stmt=con.createStatement();
 					
 					// On vide la table avant toute chose pour n'avoir qu'une seule ligne.
-					sql = "DELETE FROM user_datas";
+					sql = "TRUNCATE TABLE user_datas";
 					stmt.executeUpdate(sql);
 					sql = "INSERT INTO `user_datas` (`nom`, `age`, `taille`) VALUES ('"+ nom +"', '"+ age + "', '"+ taille +"')";
 					stmt.executeUpdate(sql);					
@@ -137,8 +135,7 @@ public class LireAfficherDB implements ActionListener {
 		} else if (e.getActionCommand().equals("Afficher")) {
 			// LECTURE DE LA DB ET AFFICHAGE DIRECTEMENT DANS LES TEXTFIELDS
 			try {
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/lire_afficher","root","");
+				Connection con=ConnexionDB.getConnection();
 				Statement stmt=con.createStatement();
 
 				ResultSet rs=stmt.executeQuery("select *  from user_datas");
@@ -156,12 +153,10 @@ public class LireAfficherDB implements ActionListener {
 		} else if (e.getActionCommand().equals("Effacer")) {
 			// SUPPRESSION DU CONTENU DE LA DB ET DES CHAMPS DE TEXTE
 			try {
-				String sql;
-				Class.forName("com.mysql.cj.jdbc.Driver");
-				Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/lire_afficher","root","");
+				Connection con=ConnexionDB.getConnection();
 				Statement stmt=con.createStatement();
 				
-				sql = "DELETE FROM user_datas";
+				sql = "TRUNCATE TABLE user_datas";
 				stmt.executeUpdate(sql);				
 				con.close();
 				
