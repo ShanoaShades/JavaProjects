@@ -2,24 +2,18 @@ package lireAfficher;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.*;
 
 public class LireAfficherDB implements ActionListener {
+	/**
+	 * Cette classe gère la mise en forme et les actions exécutées lorsque les
+	 * boutons seront cliqués.Les manières dont les champs de texte seront traités
+	 * sont définies dans la classe Action.
+	 */
+
 	JFrame fenetre;
 	JLabel nomLabel, ageLabel, tailleLabel;
 	JTextField nomTF, ageTF, tailleTF;
 	JButton lire, afficher, effacer;
-	File file;
-
-	private String nom, donnees, userHome, sql;
-	private int age;
-	private double taille;
 
 	LireAfficherDB() {
 		// LABELS
@@ -68,108 +62,20 @@ public class LireAfficherDB implements ActionListener {
 	}
 
 	// Ici on s'occupe de l'action, de ce qui se passe quand l'action est exécutée
-	public void actionPerformed(ActionEvent e) {		
+	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("Lire")) {
 			// VERIFICATION QUE LES DONNEES CORRESPONDENT à CE QUI EST ATTENDU
-			// Création d'un flag qui permettra de passer d'un testeur d'exception à un
-			// autre tant qu'il est true
-			boolean success, errorName, errorNum;
-			success = true;
-			errorName = false;
-			errorNum = false;
-
-			// Vérifier si le champ nom est vide
-			if (nomTF.getText().isEmpty()) {
-				success = false;
-				errorName = true;
-			}
-
-			// Vérifier si les nombres sont corrects
-			try {
-				int age = Integer.parseInt(ageTF.getText());
-				double taille = Double.parseDouble(tailleTF.getText());
-			} catch (NumberFormatException e1) {
-				// Affichage d'un message d'erreur
-				success = false;
-				errorNum = true;
-			}
-
-			// PERSONNALISATION DES MESSAGES D'ERREUR
-			if (errorName && errorNum) {
-				JOptionPane.showMessageDialog(null, "Veuillez saisir un nom et des nombres valides.",
-						"Erreur de saisie", JOptionPane.ERROR_MESSAGE);
-			} else if (errorName) {
-				JOptionPane.showMessageDialog(null, "Veuillez saisir un nom.", "Erreur de saisie",
-						JOptionPane.ERROR_MESSAGE);
-			} else if (errorNum) {
-				JOptionPane.showMessageDialog(null, "Veuillez saisir un nombre valide.", "Erreur de saisie",
-						JOptionPane.ERROR_MESSAGE);
-			}
-
+			boolean success = Action.controler(nomTF, ageTF, tailleTF);
 			// LECTURE DES TEXTFIELD ET ENREGISTREMENT DANS LA DB
 			if (success) {
-				String nom, age, taille;
-				nom = nomTF.getText();
-				age = ageTF.getText();
-				taille = tailleTF.getText();
-				
-				try {					
-					Connection con=ConnexionDB.getConnection();
-					Statement stmt=con.createStatement();
-					
-					// On vide la table avant toute chose pour n'avoir qu'une seule ligne.
-					sql = "TRUNCATE TABLE user_datas";
-					stmt.executeUpdate(sql);
-					sql = "INSERT INTO `user_datas` (`nom`, `age`, `taille`) VALUES ('"+ nom +"', '"+ age + "', '"+ taille +"')";
-					stmt.executeUpdate(sql);					
-					con.close();
-					
-					nomTF.setText(null);
-					ageTF.setText(null);
-					tailleTF.setText(null);
-				}catch (Exception e1){
-					e1.printStackTrace();
-				}
+				Action.lire(nomTF, ageTF, tailleTF);
 			}
-
 		} else if (e.getActionCommand().equals("Afficher")) {
 			// LECTURE DE LA DB ET AFFICHAGE DIRECTEMENT DANS LES TEXTFIELDS
-			try {
-				Connection con=ConnexionDB.getConnection();
-				Statement stmt=con.createStatement();
-
-				ResultSet rs=stmt.executeQuery("select *  from user_datas");
-				while(rs.next()) {
-					
-					nomTF.setText(rs.getString(1));
-					ageTF.setText(Integer.toString(rs.getInt(2)));
-					tailleTF.setText(Double.toString(rs.getDouble(3)));				
-				}			
-				con.close();
-				
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+			Action.afficher(nomTF, ageTF, tailleTF);
 		} else if (e.getActionCommand().equals("Effacer")) {
 			// SUPPRESSION DU CONTENU DE LA DB ET DES CHAMPS DE TEXTE
-			try {
-				Connection con=ConnexionDB.getConnection();
-				Statement stmt=con.createStatement();
-				
-				sql = "TRUNCATE TABLE user_datas";
-				stmt.executeUpdate(sql);				
-				con.close();
-				
-				nomTF.setText(null);
-				ageTF.setText(null);
-				tailleTF.setText(null);
-			}catch (Exception e1){
-				e1.printStackTrace();
-			}
+			Action.effacer(nomTF, ageTF, tailleTF);
 		}
-	}
-
-	public static void main(String[] args) {
-		new LireAfficherDB();
 	}
 }

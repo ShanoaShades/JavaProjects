@@ -4,7 +4,13 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
 
-public class LireAfficher implements ActionListener {
+public class LireAfficherTxt implements ActionListener {
+	/**
+	 * Cette classe gère la mise en forme et les actions exécutées lorsque les
+	 * boutons seront cliqués.Les données seront enregistrées dans un fichier txt
+	 * contrairement à la classe LireAfficherDB.
+	 */
+
 	JFrame fenetre;
 	JLabel nomLabel, ageLabel, tailleLabel;
 	JTextField nomTF, ageTF, tailleTF;
@@ -15,7 +21,7 @@ public class LireAfficher implements ActionListener {
 	private int age;
 	private double taille;
 
-	LireAfficher() {
+	LireAfficherTxt() {
 		// LABELS
 		nomLabel = new JLabel("Nom");
 		nomLabel.setBounds(25, 35, 300, 20);
@@ -173,6 +179,6 @@ public class LireAfficher implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new LireAfficher();
+		new LireAfficherTxt();
 	}
 }
