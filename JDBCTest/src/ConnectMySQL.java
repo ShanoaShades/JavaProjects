@@ -16,8 +16,7 @@ public class ConnectMySQL
       ResultSet res = stmt.executeQuery("SELECT * FROM person");
       //étape 4: exécuter la requête
       while(res.next())
-        System.out.println(res.getInt(1)+"  "+res.getString(2)
-        +"  "+res.getString(3));
+        System.out.println(res.getInt(1)+"  "+res.getString(2)+"  "+res.getString(3));
       //étape 5: fermez l'objet de connexion
       conn.close();
     }
